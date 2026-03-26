@@ -1,4 +1,4 @@
-# TradeConnect NZ — Full-Stack Starter
+# TradieConnect NZ — Full-Stack Starter
 
 This is a production-oriented starter for your construction jobs marketplace.
 

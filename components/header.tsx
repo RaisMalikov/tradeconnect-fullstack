@@ -7,6 +7,8 @@ const links: { href: Route; label: string }[] = [
   { href: "/tradies", label: "Tradies" },
   { href: "/post-job", label: "Post a Job" },
   { href: "/login", label: "Login" },
+  { href: "/register", label: "Register" },
+  { href: "/profile", label: "My Profile" },
 ];
 
 export default function Header() {

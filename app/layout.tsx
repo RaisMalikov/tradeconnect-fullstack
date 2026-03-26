@@ -4,7 +4,7 @@ import Header from '@/components/header';
 import { Footer } from '@/components/footer';
 
 export const metadata: Metadata = {
-  title: 'TradeConnect NZ',
+  title: 'TradieConnect NZ',
   description: 'Direct jobs marketplace for construction trades.'
 };
 

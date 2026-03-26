@@ -16,7 +16,7 @@ export default function HomePage() {
               Get construction jobs directly. No recruiters. No middlemen.
             </h1>
             <p className="max-w-2xl text-lg text-slate-300">
-              TradeConnect NZ helps homeowners, builders, and subcontractors post jobs and connect directly with local trades.
+              TradieConnect NZ helps homeowners, builders, and subcontractors post jobs and connect directly with local tradies.
               Registration is free. Start in Auckland, then grow nationwide and into the app.
             </p>
             <div className="flex flex-wrap gap-4">

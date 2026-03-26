@@ -1,30 +1,64 @@
-import { JobCard } from '@/components/job-card';
-import { SectionTitle } from '@/components/section-title';
-import { fallbackJobs } from '@/lib/mock-data';
+"use client";
+
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+
+type Job = {
+  id: string;
+  title: string;
+  description: string | null;
+  trade_required: string | null;
+  location: string | null;
+  budget: number | null;
+  created_at: string;
+};
 
 export default function JobsPage() {
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    async function loadJobs() {
+      const { data, error } = await supabase
+        .from("jobs")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        setMessage(error.message);
+        return;
+      }
+
+      setJobs(data || []);
+    }
+
+    loadJobs();
+  }, []);
+
   return (
-    <div className="container-shell py-14">
-      <SectionTitle eyebrow="Jobs board" title="Find construction work" description="In the production version, filters and search will query live Supabase data." />
-      <div className="mt-8 grid gap-6 lg:grid-cols-[320px_1fr]">
-        <aside className="card h-fit p-5">
-          <h3 className="text-lg font-semibold text-white">Filters</h3>
-          <div className="mt-4 space-y-4">
-            <input className="input" placeholder="Trade" />
-            <input className="input" placeholder="Location" />
-            <select className="select" defaultValue="">
-              <option value="">Urgency</option>
-              <option>Urgent</option>
-              <option>This week</option>
-              <option>Planned</option>
-            </select>
-            <button className="button-primary w-full">Apply filters</button>
-          </div>
-        </aside>
-        <div className="grid gap-6">
-          {fallbackJobs.map((job) => <JobCard key={job.id} job={job} />)}
+    <main className="mx-auto max-w-5xl p-6">
+      <h1 className="mb-6 text-3xl font-bold">Jobs</h1>
+
+      {message && <p className="mb-4">{message}</p>}
+
+      {jobs.length === 0 ? (
+        <p>No jobs posted yet.</p>
+      ) : (
+        <div className="space-y-4">
+          {jobs.map((job) => (
+            <article key={job.id} className="rounded border p-4">
+              <h2 className="text-xl font-semibold">{job.title}</h2>
+              <p className="mt-2">{job.description}</p>
+
+              <div className="mt-3 space-y-1 text-sm text-slate-600">
+                <p><strong>Trade:</strong> {job.trade_required || "Not specified"}</p>
+                <p><strong>Location:</strong> {job.location || "Not specified"}</p>
+                <p><strong>Budget:</strong> {job.budget ?? "Not specified"}</p>
+              </div>
+            </article>
+          ))}
         </div>
-      </div>
-    </div>
+      )}
+    </main>
   );
 }
