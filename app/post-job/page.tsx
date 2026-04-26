@@ -12,43 +12,56 @@ export default function PostJobPage() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
-    setMessage("");
+    setMessage("Posting job...");
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    try {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
 
-    if (!user) {
+      if (userError) {
+        setMessage(userError.message);
+        setLoading(false);
+        return;
+      }
+
+      if (!user) {
+        setMessage("Please log in first.");
+        setLoading(false);
+        return;
+      }
+
+      const { error } = await supabase.from("jobs").insert({
+        user_id: user.id,
+        title,
+        description,
+        trade_required: tradeRequired,
+        location,
+        budget: budget ? Number(budget) : null,
+      });
+
+      if (error) {
+        setMessage(error.message);
+        setLoading(false);
+        return;
+      }
+
+      setTitle("");
+      setDescription("");
+      setTradeRequired("");
+      setLocation("");
+      setBudget("");
+      setMessage("Job posted successfully.");
+    } catch (err) {
+      console.error("Post job error:", err);
+      setMessage("Something went wrong while posting the job.");
+    } finally {
       setLoading(false);
-      setMessage("Please log in first.");
-      return;
     }
-
-    const { error } = await supabase.from("jobs").insert({
-      user_id: user.id,
-      title,
-      description,
-      trade_required: tradeRequired,
-      location,
-      budget: budget ? Number(budget) : null,
-    });
-
-    setLoading(false);
-
-    if (error) {
-      setMessage(error.message);
-      return;
-    }
-
-    setTitle("");
-    setDescription("");
-    setTradeRequired("");
-    setLocation("");
-    setBudget("");
-    setMessage("Job posted successfully.");
   }
 
   return (
@@ -74,7 +87,7 @@ export default function PostJobPage() {
 
         <input
           className="w-full rounded border p-3 text-black"
-          placeholder="Trade required (e.g. Plumber, Electrician)"
+          placeholder="Trade required"
           value={tradeRequired}
           onChange={(e) => setTradeRequired(e.target.value)}
         />

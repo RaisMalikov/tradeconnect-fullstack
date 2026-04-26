@@ -12,107 +12,77 @@ type Profile = {
   bio: string | null;
 };
 
-export default function ProfilePage() {
-  const [profile, setProfile] = useState<Profile | null>(null);
+export default function TradiesPage() {
+  const [tradies, setTradies] = useState<Profile[]>([]);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadProfile() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        setMessage("You are not logged in.");
-        return;
-      }
-
+    async function loadTradies() {
       const { data, error } = await supabase
         .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .single();
+        .select("id, full_name, trade, location, phone, bio")
+        .order("created_at", { ascending: false });
 
       if (error) {
         setMessage(error.message);
+        setLoading(false);
         return;
       }
 
-      setProfile(data);
+      setTradies(data || []);
+      setLoading(false);
     }
 
-    loadProfile();
+    loadTradies();
   }, []);
 
-  async function saveProfile() {
-    if (!profile) return;
-
-    const { error } = await supabase
-      .from("profiles")
-      .update({
-        full_name: profile.full_name,
-        trade: profile.trade,
-        location: profile.location,
-        phone: profile.phone,
-        bio: profile.bio,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", profile.id);
-
-    setMessage(error ? error.message : "Profile updated.");
-  }
-
-  if (message && !profile) {
-    return <main className="p-6">{message}</main>;
-  }
-
-  if (!profile) {
-    return <main className="p-6">Loading...</main>;
-  }
-
   return (
-    <main className="mx-auto max-w-xl space-y-4 p-6">
-      <h1 className="text-3xl font-bold">My Profile</h1>
+    <main className="mx-auto max-w-6xl p-6">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold">Tradies</h1>
+        <p className="mt-2 text-slate-600">
+          Browse tradies on TradieConnect. Always check credentials, licences,
+          and insurance before hiring.
+        </p>
+      </div>
 
-      <input
-        className="w-full rounded border p-3 text-black"
-        value={profile.full_name ?? ""}
-        onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
-        placeholder="Full name"
-      />
-      <input
-        className="w-full rounded border p-3 text-black"
-        value={profile.trade ?? ""}
-        onChange={(e) => setProfile({ ...profile, trade: e.target.value })}
-        placeholder="Trade"
-      />
-      <input
-        className="w-full rounded border p-3 text-black"
-        value={profile.location ?? ""}
-        onChange={(e) => setProfile({ ...profile, location: e.target.value })}
-        placeholder="Location"
-      />
-      <input
-        className="w-full rounded border p-3 text-black"
-        value={profile.phone ?? ""}
-        onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-        placeholder="Phone"
-      />
-      <textarea
-        className="w-full rounded border p-3 text-black"
-        value={profile.bio ?? ""}
-        onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-        placeholder="Short bio"
-      />
+      {loading && <p>Loading tradies...</p>}
 
-      <button
-        onClick={saveProfile}
-        className="rounded bg-blue-600 px-5 py-3 font-semibold text-white"
-      >
-        Save profile
-      </button>
+      {message && <p className="mb-4 text-red-600">{message}</p>}
 
-      {message && <p>{message}</p>}
+      {!loading && tradies.length === 0 ? (
+        <p>No tradies registered yet.</p>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {tradies.map((tradie) => (
+            <article key={tradie.id} className="rounded border p-5">
+              <h2 className="text-xl font-semibold">
+                {tradie.full_name || "Unnamed tradie"}
+              </h2>
+
+              <div className="mt-3 space-y-1 text-sm text-slate-600">
+                <p>
+                  <strong>Trade:</strong>{" "}
+                  {tradie.trade || "Not specified"}
+                </p>
+                <p>
+                  <strong>Location:</strong>{" "}
+                  {tradie.location || "Not specified"}
+                </p>
+              </div>
+
+              {tradie.bio && <p className="mt-4">{tradie.bio}</p>}
+
+              {tradie.phone && (
+                <p className="mt-4 text-sm">
+                  <strong>Phone:</strong> {tradie.phone}
+                </p>
+              )}
+            </article>
+          ))}
+        </div>
+      )}
     </main>
   );
 }
