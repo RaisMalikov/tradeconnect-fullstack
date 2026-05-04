@@ -10,13 +10,13 @@ type Application = {
   message: string | null;
   status: string | null;
   created_at: string;
-  profiles: {
+  profiles?: {
     full_name: string | null;
     trade: string | null;
     location: string | null;
     phone: string | null;
     email: string | null;
-  } | null;
+  }[];
 };
 
 type Job = {
@@ -84,7 +84,7 @@ export default function MyJobsPage() {
       return;
     }
 
-    setJobs((data as Job[]) || []);
+    setJobs((data as unknown as Job[]) || []);
     setLoading(false);
   }
 
@@ -149,7 +149,7 @@ export default function MyJobsPage() {
         applications: job.applications.map((app) => {
           if (app.id === applicationId) {
             if (newStatus === "accepted") {
-              email = app.profiles?.email || "";
+              email = app.profiles?.[0]?.email || "";
               jobTitle = job.title;
             }
             return { ...app, status: newStatus };
@@ -164,9 +164,9 @@ export default function MyJobsPage() {
         email,
         "You were accepted on TradieConnect",
         `You were accepted for: ${jobTitle}`,
-        "You were accepted",
+        "Application accepted",
         "View job",
-        "https://tradeconnect-fullstack.vercel.app/my-applications"
+        "https://tradieconnects.co.nz/my-applications"
       );
     }
 
@@ -266,7 +266,7 @@ export default function MyJobsPage() {
               <div className="mt-4">
                 {job.applications.map((app) => (
                   <div key={app.id} className="border p-2 mt-2">
-                    <p>{app.profiles?.full_name}</p>
+                    <p>{app.profiles?.[0]?.full_name}</p>
 
                     <button
                       onClick={() =>
