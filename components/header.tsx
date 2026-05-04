@@ -1,38 +1,82 @@
-import Link from "next/link";
-import type { Route } from "next";
+"use client";
 
-const links: { href: Route; label: string }[] = [
-  { href: "/", label: "Home" },
-  { href: "/jobs", label: "Jobs" },
-  { href: "/tradies", label: "Tradies" },
-  { href: "/post-job", label: "Post a Job" },
-  { href: "/login", label: "Login" },
-  { href: "/register", label: "Register" },
-  { href: "/profile", label: "My Profile" },
-  { href: "/my-applications", label: "My Applications" },
-  { href: "/my-jobs", label: "My Jobs" },
-];
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export default function Header() {
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    async function getUser() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      setUser(user);
+    }
+
+    getUser();
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  async function logout() {
+    await supabase.auth.signOut();
+    window.location.href = "/";
+  }
+
   return (
-    <header className="border-b border-slate-800 bg-slate-950">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="text-lg font-semibold text-white">
-          TradieConnect
+    <header className="flex items-center justify-between border-b bg-white p-4 text-black">
+      <Link href="/" className="text-xl font-bold">
+        TradieConnect
+      </Link>
+
+      <nav className="flex items-center gap-4 text-sm">
+        <Link href="/tradies" className="hover:text-blue-600">
+          Tradies
         </Link>
 
-        <nav className="hidden gap-5 md:flex">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm text-slate-300 hover:text-white"
-            >
-              {link.label}
+        <Link href="/jobs" className="hover:text-blue-600">
+          Jobs
+        </Link>
+
+        <Link href="/post-job" className="hover:text-blue-600">
+          Post a Job
+        </Link>
+
+        {!user ? (
+          <>
+            <Link href="/register" className="hover:text-blue-600">
+              Register
             </Link>
-          ))}
-        </nav>
-      </div>
+            <Link href="/login" className="hover:text-blue-600">
+              Login
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link href="/profile" className="hover:text-blue-600">
+              My Account
+            </Link>
+
+            <button
+              onClick={logout}
+              className="rounded border px-3 py-1 hover:bg-slate-100"
+            >
+              Logout
+            </button>
+          </>
+        )}
+      </nav>
     </header>
   );
 }

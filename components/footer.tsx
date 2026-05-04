@@ -1,10 +1,21 @@
+import Link from "next/link";
+
 export function Footer() {
   return (
-    <footer className="border-t border-slate-800">
-      <div className="container-shell flex flex-col gap-3 py-8 text-sm text-slate-400 md:flex-row md:items-center md:justify-between">
-        <p>TradieConnect NZ — direct jobs marketplace for construction tradies.</p>
-        <p>Website MVP for jobs, tradie discovery, and later app expansion.</p>
+    <footer className="border-t mt-10 p-6 text-center text-sm text-slate-500">
+      <div className="space-x-4">
+        <Link href="/terms" className="hover:underline">
+          Terms
+        </Link>
+
+        <Link href="/privacy" className="hover:underline">
+          Privacy
+        </Link>
       </div>
+
+      <p className="mt-3">
+        © 2026 TradieConnect
+      </p>
     </footer>
   );
 }

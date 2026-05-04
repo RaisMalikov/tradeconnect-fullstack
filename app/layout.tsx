@@ -1,19 +1,23 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import Header from '@/components/header';
-import { Footer } from '@/components/footer';
+import type { Metadata } from "next";
+import "./globals.css";
+import Header from "@/components/header";
+import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
-  title: 'TradieConnect NZ',
-  description: 'Direct jobs marketplace for construction trades.'
+  title: "TradieConnect",
+  description: "Direct jobs for tradies in New Zealand",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body>
         <Header />
-        <main className="min-h-[calc(100vh-140px)]">{children}</main>
+        {children}
         <Footer />
       </body>
     </html>
