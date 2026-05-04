@@ -1,21 +1,27 @@
 "use client";
 
+import { sendEmail } from "@/lib/send-email";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { sendEmail } from "@/lib/send-email";
 
 type Profile = {
   id: string;
   full_name: string | null;
   trade: string | null;
   location: string | null;
+  phone: string | null;
   bio: string | null;
-  email: string | null; // ✅ required
+  email: string | null;
+};
+
+type Job = {
+  id: string;
+  title: string;
 };
 
 export default function TradiesPage() {
-<<<<<<< HEAD
   const [tradies, setTradies] = useState<Profile[]>([]);
+  const [myJobs, setMyJobs] = useState<Job[]>([]);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -23,45 +29,72 @@ export default function TradiesPage() {
   const [tradeFilter, setTradeFilter] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
 
-  const [messages, setMessages] = useState<Record<string, string>>({});
+  const [selectedJobs, setSelectedJobs] = useState<Record<string, string>>({});
+  const [inviteMessages, setInviteMessages] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    loadTradies();
+    loadData();
   }, []);
 
-  async function loadTradies() {
-    const { data, error } = await supabase
+  async function loadData() {
+    const { data: tradieData, error: tradieError } = await supabase
       .from("profiles")
       .select("id, full_name, trade, location, phone, bio, email")
       .order("full_name", { ascending: true });
 
-    if (error) {
-      setMessage(error.message);
+    if (tradieError) {
+      setMessage(tradieError.message);
       setLoading(false);
       return;
     }
 
-    setTradies(data || []);
+    setTradies(tradieData || []);
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user) {
+      const { data: jobData } = await supabase
+        .from("jobs")
+        .select("id, title")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      setMyJobs(jobData || []);
+    }
+
     setLoading(false);
   }
 
   async function inviteTradie(tradieId: string) {
+    setStatus((prev) => ({ ...prev, [tradieId]: "Sending invitation..." }));
+
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     if (!user) {
-      setStatus((prev) => ({ ...prev, [tradieId]: "Login required." }));
+      setStatus((prev) => ({ ...prev, [tradieId]: "Please log in first." }));
       return;
     }
 
-    const customMessage = messages[tradieId] || "";
+    const jobId = selectedJobs[tradieId];
+
+    if (!jobId) {
+      setStatus((prev) => ({ ...prev, [tradieId]: "Please select a job first." }));
+      return;
+    }
+
+    const customMessage = inviteMessages[tradieId] || "";
 
     const { error } = await supabase.from("invitations").insert({
+      job_id: jobId,
       tradie_id: tradieId,
       client_id: user.id,
       message: customMessage,
+      status: "pending",
     });
 
     if (error) {
@@ -69,35 +102,39 @@ export default function TradiesPage() {
       return;
     }
 
-    // 🔥 SEND EMAIL
-    const invitedTradie = tradies.find((t) => t.id === tradieId);
+    const invitedTradie = tradies.find((tradie) => tradie.id === tradieId);
 
     if (invitedTradie?.email) {
       await sendEmail(
         invitedTradie.email,
         "You received a job invitation on TradieConnect",
-        `A client invited you to apply for a job.\n\nMessage: ${customMessage || "No message"}\n\nLog in to TradieConnect to view details.`
+        `A client invited you to apply for a job.\n\nMessage: ${
+          customMessage || "No message"
+        }`,
+        "New job invitation",
+        "View invitation",
+        "https://tradeconnects.co.nz/my-invitations"
       );
     }
 
     setStatus((prev) => ({ ...prev, [tradieId]: "Invitation sent." }));
-    setMessages((prev) => ({ ...prev, [tradieId]: "" }));
+    setInviteMessages((prev) => ({ ...prev, [tradieId]: "" }));
   }
 
   const filteredTradies = useMemo(() => {
-    return tradies.filter((t) => {
-      const text = `${t.full_name || ""} ${t.trade || ""} ${
-        t.location || ""
-      } ${t.bio || ""}`.toLowerCase();
+    return tradies.filter((tradie) => {
+      const text = `${tradie.full_name || ""} ${tradie.trade || ""} ${
+        tradie.location || ""
+      } ${tradie.bio || ""}`.toLowerCase();
 
       return (
         text.includes(search.toLowerCase()) &&
         (!tradeFilter ||
-          (t.trade || "")
+          (tradie.trade || "")
             .toLowerCase()
             .includes(tradeFilter.toLowerCase())) &&
         (!locationFilter ||
-          (t.location || "")
+          (tradie.location || "")
             .toLowerCase()
             .includes(locationFilter.toLowerCase()))
       );
@@ -105,11 +142,11 @@ export default function TradiesPage() {
   }, [tradies, search, tradeFilter, locationFilter]);
 
   const tradeOptions = Array.from(
-    new Set(tradies.map((t) => t.trade).filter(Boolean))
+    new Set(tradies.map((tradie) => tradie.trade).filter(Boolean))
   ) as string[];
 
   const locationOptions = Array.from(
-    new Set(tradies.map((t) => t.location).filter(Boolean))
+    new Set(tradies.map((tradie) => tradie.location).filter(Boolean))
   ) as string[];
 
   return (
@@ -132,8 +169,10 @@ export default function TradiesPage() {
           onChange={(e) => setTradeFilter(e.target.value)}
         >
           <option value="">All trades</option>
-          {tradeOptions.map((t) => (
-            <option key={t}>{t}</option>
+          {tradeOptions.map((trade) => (
+            <option key={trade} value={trade}>
+              {trade}
+            </option>
           ))}
         </select>
 
@@ -143,125 +182,89 @@ export default function TradiesPage() {
           onChange={(e) => setLocationFilter(e.target.value)}
         >
           <option value="">All locations</option>
-          {locationOptions.map((l) => (
-            <option key={l}>{l}</option>
+          {locationOptions.map((location) => (
+            <option key={location} value={location}>
+              {location}
+            </option>
           ))}
         </select>
       </div>
 
       {loading ? (
         <p>Loading tradies...</p>
+      ) : filteredTradies.length === 0 ? (
+        <p>No tradies found.</p>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredTradies.map((tradie) => (
-            <div key={tradie.id} className="rounded border p-4">
+            <div key={tradie.id} className="rounded-xl border bg-white p-5 shadow-sm">
               <h2 className="text-xl font-semibold">
-                {tradie.full_name || "Unnamed"}
+                {tradie.full_name || "Unnamed tradie"}
               </h2>
 
-              <p className="text-sm text-slate-600">
-                {tradie.trade} • {tradie.location}
+              <p className="mt-2 text-sm text-slate-600">
+                {tradie.trade || "Trade not specified"} •{" "}
+                {tradie.location || "Location not specified"}
               </p>
 
-              <p className="mt-2 text-sm">
-                {tradie.bio || "No bio provided"}
+              <p className="mt-3 text-sm text-slate-700">
+                {tradie.bio || "No bio provided."}
               </p>
 
-              <textarea
-                className="mt-3 w-full rounded border p-2 text-sm"
-                placeholder="Message (optional)"
-                value={messages[tradie.id] || ""}
-                onChange={(e) =>
-                  setMessages((prev) => ({
-                    ...prev,
-                    [tradie.id]: e.target.value,
-                  }))
-                }
-              />
+              <div className="mt-5 border-t pt-4">
+                <h3 className="font-semibold">Invite to a job</h3>
 
-              <button
-                onClick={() => inviteTradie(tradie.id)}
-                className="mt-3 w-full rounded bg-blue-600 py-2 text-white"
-              >
-                Invite
-              </button>
+                {myJobs.length === 0 ? (
+                  <p className="mt-2 text-sm text-slate-600">
+                    Log in and post a job first to invite this tradie.
+                  </p>
+                ) : (
+                  <div className="mt-3 space-y-3">
+                    <select
+                      className="w-full rounded border p-3"
+                      value={selectedJobs[tradie.id] || ""}
+                      onChange={(e) =>
+                        setSelectedJobs((prev) => ({
+                          ...prev,
+                          [tradie.id]: e.target.value,
+                        }))
+                      }
+                    >
+                      <option value="">Select your job</option>
+                      {myJobs.map((job) => (
+                        <option key={job.id} value={job.id}>
+                          {job.title}
+                        </option>
+                      ))}
+                    </select>
 
-              {status[tradie.id] && (
-                <p className="mt-2 text-sm text-green-600">
-                  {status[tradie.id]}
-                </p>
-              )}
+                    <textarea
+                      className="w-full rounded border p-3"
+                      rows={3}
+                      placeholder="Optional message"
+                      value={inviteMessages[tradie.id] || ""}
+                      onChange={(e) =>
+                        setInviteMessages((prev) => ({
+                          ...prev,
+                          [tradie.id]: e.target.value,
+                        }))
+                      }
+                    />
+
+                    <button
+                      onClick={() => inviteTradie(tradie.id)}
+                      className="w-full rounded bg-blue-600 px-4 py-2 font-semibold text-white"
+                    >
+                      Invite Tradie
+                    </button>
+
+                    {status[tradie.id] && (
+                      <p className="text-sm text-green-600">{status[tradie.id]}</p>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
-=======
-  const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    async function loadProfiles() {
-      try {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("id, full_name, trade, location, bio")
-          .order("full_name", { ascending: true });
-
-        if (error) {
-          setError(error.message);
-          setLoading(false);
-          return;
-        }
-
-        setProfiles(data || []);
-        setLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
-        setLoading(false);
-      }
-    }
-
-    loadProfiles();
-  }, []);
-
-  return (
-    <main className="mx-auto max-w-5xl p-6">
-      <h1 className="mb-6 text-3xl font-bold">Directory of Tradies</h1>
-
-      {error && (
-        <div className="mb-4 rounded border border-red-300 bg-red-50 p-4 text-red-700">
-          {error}
-        </div>
-      )}
-
-      {loading ? (
-        <p className="text-slate-600">Loading tradies...</p>
-      ) : profiles.length === 0 ? (
-        <p className="text-slate-600">No tradies in the directory yet.</p>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {profiles.map((profile) => (
-            <article
-              key={profile.id}
-              className="rounded border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md"
-            >
-              <h2 className="text-lg font-semibold text-slate-900">
-                {profile.full_name || "Unnamed"}
-              </h2>
-
-              {profile.trade && (
-                <p className="mt-2 text-sm font-medium text-blue-600">
-                  {profile.trade}
-                </p>
-              )}
-
-              {profile.location && (
-                <p className="mt-1 text-sm text-slate-600">📍 {profile.location}</p>
-              )}
-
-              {profile.bio && (
-                <p className="mt-3 text-sm text-slate-700">{profile.bio}</p>
-              )}
-            </article>
->>>>>>> b2853355a6eac1510ed79a2fdc08202890ff94e2
           ))}
         </div>
       )}

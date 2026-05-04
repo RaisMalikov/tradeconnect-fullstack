@@ -14,7 +14,7 @@ type Job = {
   budget: number | null;
   profiles?: {
     email: string | null;
-  } | null;
+  }[]; // ✅ FIXED (array)
   job_files?: {
     id: string;
     public_url: string;
@@ -69,7 +69,7 @@ export default function JobsPage() {
       return;
     }
 
-    setJobs((data as Job[]) || []);
+    setJobs((data as unknown as Job[]) || []);
     setLoading(false);
   }
 
@@ -121,7 +121,7 @@ export default function JobsPage() {
       return;
     }
 
-    const ownerEmail = job.profiles?.email;
+    const ownerEmail = job.profiles?.[0]?.email; // ✅ FIXED
 
     if (ownerEmail) {
       await sendEmail(
@@ -130,7 +130,7 @@ export default function JobsPage() {
         `A tradie has applied to your job: ${job.title}`,
         "New job application",
         "View applications",
-        "https://tradeconnect-fullstack.vercel.app/my-jobs"
+        "https://tradieconnects.co.nz/my-jobs"
       );
     }
 
@@ -221,7 +221,6 @@ export default function JobsPage() {
                   {job.location || "Location not specified"}
                 </p>
 
-                {/* 🔥 FILES DISPLAY */}
                 {job.job_files && job.job_files.length > 0 && (
                   <div className="mt-4">
                     <p className="mb-2 text-sm font-semibold">Attachments:</p>
@@ -234,7 +233,6 @@ export default function JobsPage() {
                           <img
                             key={file.id}
                             src={file.public_url}
-                            alt={file.file_name || "job image"}
                             className="h-32 w-32 rounded object-cover border"
                           />
                         ) : (
@@ -256,11 +254,7 @@ export default function JobsPage() {
                   <button
                     disabled={alreadyApplied || applying === job.id}
                     onClick={() => applyToJob(job)}
-                    className={`rounded px-4 py-2 text-white ${
-                      alreadyApplied
-                        ? "bg-gray-400"
-                        : "bg-blue-600 hover:bg-blue-700"
-                    }`}
+                    className="rounded bg-blue-600 px-4 py-2 text-white"
                   >
                     {alreadyApplied
                       ? "Applied"
