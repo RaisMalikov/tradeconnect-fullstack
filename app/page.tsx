@@ -35,7 +35,7 @@ export default function HomePage() {
             </div>
 
             <p className="mt-6 text-sm text-slate-500">
-              TradieConnect connects clients and tradies. Always check licences and credentials.
+              TradieConnectss connects clients and tradies. Always check licences and credentials.
             </p>
           </div>
 

@@ -162,7 +162,7 @@ export default function MyJobsPage() {
     if (newStatus === "accepted" && email) {
       await sendEmail(
         email,
-        "You were accepted on TradieConnect",
+        "You were accepted on TradieConnectss",
         `You were accepted for: ${jobTitle}`,
         "Application accepted",
         "View job",

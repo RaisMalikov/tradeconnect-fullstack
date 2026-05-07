@@ -1,45 +1,35 @@
+/* app/globals.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Global styles */
+:root {
+  --primary: #0ea5e9;     /* ← Change this */
+  --primary-dark: #0284c8;
+  --secondary: #1e40af;   /* ← Change this */
+  --accent: #eab308;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --neutral: #64748b;
+}
+
 body {
-  @apply bg-white text-black antialiased;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* Links */
-a {
-  @apply text-blue-600 hover:underline transition-colors;
+.tradie-primary {
+  color: var(--primary);
 }
 
-/* Layout */
-.container-shell {
-  @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+.tradie-btn {
+  background-color: var(--primary);
+  transition: all 0.2s ease;
 }
 
-/* Cards */
-.card {
-  @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+.tradie-btn:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
 }
 
-/* Inputs */
-.input {
-  @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-black outline-none placeholder:text-slate-400 focus:border-blue-500;
-}
-
-.select {
-  @apply input;
-}
-
-.textarea {
-  @apply input min-h-[120px] resize-y;
-}
-
-/* Buttons */
-.button-primary {
-  @apply inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700;
-}
-
-.button-secondary {
-  @apply inline-flex items-center justify-center rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold text-black hover:bg-slate-100;
-}
+/* Add more brand utilities as needed */

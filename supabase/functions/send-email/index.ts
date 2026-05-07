@@ -33,7 +33,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "TradieConnect <onboarding@resend.dev>",
+        from: "TradieConnectss <onboarding@resend.dev>",
         to,
         subject,
         text,

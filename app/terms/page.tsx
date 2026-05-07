@@ -7,7 +7,7 @@ export default function TermsPage() {
         <p><strong>Last updated:</strong> 2026</p>
 
         <p>
-          TradieConnect is a platform that connects clients and tradies.
+          TradieConnectss is a platform that connects clients and tradies.
           We are not a contractor, employer, or service provider.
         </p>
 
@@ -29,13 +29,13 @@ export default function TermsPage() {
 
         <h2 className="text-lg font-semibold">No Guarantees</h2>
         <p>
-          TradieConnect does not guarantee quality of work, licensing,
+          TradieConnectss does not guarantee quality of work, licensing,
           or outcomes of any job.
         </p>
 
         <h2 className="text-lg font-semibold">Liability</h2>
         <p>
-          To the extent permitted by law, TradieConnect is not liable for
+          To the extent permitted by law, TradieConnectss is not liable for
           any loss arising from use of the platform.
         </p>
 

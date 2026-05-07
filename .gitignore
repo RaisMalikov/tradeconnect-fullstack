@@ -1,3 +1,9 @@
 node_modules
 .next
 .env.local
+
+.DS_Store
+.vscode
+supabase/.temp
+node_modules
+.env.local

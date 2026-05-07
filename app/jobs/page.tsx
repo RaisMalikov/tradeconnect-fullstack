@@ -126,7 +126,7 @@ export default function JobsPage() {
     if (ownerEmail) {
       await sendEmail(
         ownerEmail,
-        "New application on TradieConnect",
+        "New application on TradieConnectss",
         `A tradie has applied to your job: ${job.title}`,
         "New job application",
         "View applications",

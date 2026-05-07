@@ -14,7 +14,7 @@ export function Footer() {
       </div>
 
       <p className="mt-3">
-        © 2026 TradieConnect
+        © 2026 TradieConnectss
       </p>
     </footer>
   );
