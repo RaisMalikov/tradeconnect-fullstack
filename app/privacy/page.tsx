@@ -7,7 +7,7 @@ export default function PrivacyPage() {
         <p><strong>Last updated:</strong> 2026</p>
 
         <p>
-          TradieConnectss collects personal information such as name,
+          TradieConnects collects personal information such as name,
           email, phone, trade, and location to operate the platform.
         </p>
 

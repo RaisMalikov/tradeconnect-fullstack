@@ -107,7 +107,7 @@ export default function TradiesPage() {
     if (invitedTradie?.email) {
       await sendEmail(
         invitedTradie.email,
-        "You received a job invitation on TradieConnectss",
+        "You received a job invitation on TradieConnects",
         `A client invited you to apply for a job.\n\nMessage: ${
           customMessage || "No message"
         }`,

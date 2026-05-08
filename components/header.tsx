@@ -37,7 +37,7 @@ export default function Header() {
   return (
     <header className="flex items-center justify-between border-b bg-white p-4 text-black">
       <Link href="/" className="text-xl font-bold">
-        TradieConnectss
+        TradieConnects
       </Link>
 
       <nav className="flex items-center gap-4 text-sm">
