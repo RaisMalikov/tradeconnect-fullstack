@@ -2,22 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 1. MATCH THE LOGO BACKGROUND GLOBALLY */
 :root {
-  /* This color matches the navy background in your logo */
-  --site-bg: #111827; 
+  --site-bg: #161A22; /* The exact color from your logo image */
 }
 
 body {
   background-color: var(--site-bg) !important;
-  color: #ffffff;
+  color: #ffffff !important; /* Force all standard text to white */
 }
 
-/* Fixes the invisible text in inputs and cards */
-input, textarea {
-  color: #111827 !important; /* Dark text inside white boxes */
-  background-color: #ffffff !important;
+/* 2. FORCE ALL INPUTS/SEARCH BARS TO BE DARK ACROSS THE WHOLE SITE */
+input, 
+textarea, 
+select {
+  background-color: #1f2937 !important; /* Dark Grey */
+  color: #ffffff !important;            /* White Text */
+  border: 1px solid #374151 !important; /* Subtle border */
+  border-radius: 0.5rem !important;
 }
 
-placeholder {
-  color: #64748b !important;
+/* Make placeholder text visible but dim */
+input::placeholder, 
+textarea::placeholder {
+  color: #9ca3af !important; 
+}
+
+/* 3. FIX ALL WHITE CARDS GLOBALLY */
+/* If any component tries to use bg-white, this overrides it to a premium dark grey */
+.bg-white {
+  background-color: #1f2937 !important;
+  border: 1px solid #374151 !important;
+}
+
+/* 4. FIX ALL BLACK TEXT GLOBALLY */
+/* Overrides text that is specifically set to dark colors in components */
+.text-gray-900, 
+.text-slate-900, 
+.text-black {
+  color: #ffffff !important;
+}
+
+/* Keep the blue/orange buttons looking correct */
+button, .bg-orange-600 {
+  color: #ffffff !important;
 }
