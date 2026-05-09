@@ -1,29 +1,56 @@
-import React from 'react';
-
 export default function ContactPage() {
   return (
-    <main className="container mx-auto px-4 py-20 max-w-3xl text-center">
-      <h1 className="text-4xl font-extrabold mb-6 text-gray-900">Get in Touch</h1>
-      <p className="text-xl text-gray-600 mb-10">
-        Have questions about TradieConnects? We're here to help you get the job done.
-      </p>
-      
-      <div className="bg-slate-50 p-10 rounded-2xl border border-slate-200 shadow-sm">
-        <h2 className="text-2xl font-semibold mb-4 text-slate-800">Email Support</h2>
-        <p className="text-slate-600 mb-6">
-          For account support, feedback, or general inquiries, drop us a line at:
-        </p>
-        <a 
-          href="mailto:info@tradieconnects.co.nz" 
-          className="text-2xl font-bold text-blue-600 hover:text-blue-700 underline decoration-2 underline-offset-4 transition-all"
-        >
-          info@tradieconnects.co.nz
-        </a>
+    <main className="min-h-screen p-8 max-w-6xl mx-auto">
+      <div className="text-center mb-16">
+        <h1 className="text-5xl font-black mb-4">Get in Touch</h1>
+        <p className="text-slate-400 max-w-xl mx-auto">Have a question about the platform or need help with your account? Our NZ-based team is here to help.</p>
       </div>
-      
-      <div className="mt-12 text-sm text-slate-500">
-        <p>Based in New Zealand. We usually respond within 24 hours.</p>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        {/* Contact Form */}
+        <div className="bg-[#0f172a] p-8 rounded-3xl border border-slate-800 shadow-2xl">
+          <form className="space-y-6">
+            <div>
+              <label className="block text-sm font-bold mb-2 text-slate-400">Full Name</label>
+              <input type="text" className="w-full" placeholder="Your Name" />
+            </div>
+            <div>
+              <label className="block text-sm font-bold mb-2 text-slate-400">Email Address</label>
+              <input type="email" className="w-full" placeholder="email@example.co.nz" />
+            </div>
+            <div>
+              <label className="block text-sm font-bold mb-2 text-slate-400">How can we help?</label>
+              <textarea className="w-full" rows={4} placeholder="Tell us what's on your mind..."></textarea>
+            </div>
+            <button className="w-full bg-orange-600 hover:bg-orange-500 text-white py-4 rounded-xl font-black uppercase tracking-widest transition-all">
+              Send Message
+            </button>
+          </form>
+        </div>
+
+        {/* Contact Details */}
+        <div className="flex flex-col justify-center space-y-8">
+          <div className="flex items-center gap-6">
+            <div className="w-14 h-14 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20">
+              <span className="text-2xl">📍</span>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold">Location</h3>
+              <p className="text-slate-400">Auckland, New Zealand</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <div className="w-14 h-14 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20">
+              <span className="text-2xl">📧</span>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold">Email</h3>
+              <p className="text-slate-400">support@tradieconnects.co.nz</p>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
-  );
+  )
 }

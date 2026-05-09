@@ -1,44 +1,20 @@
 export default function PrivacyPage() {
   return (
-    <main className="mx-auto max-w-4xl p-6">
-      <h1 className="mb-6 text-3xl font-bold">Privacy Policy</h1>
+    <main className="min-h-screen p-8 max-w-4xl mx-auto text-slate-300">
+      <h1 className="text-4xl font-black text-white mb-4">Privacy Policy</h1>
+      <p className="mb-8 text-slate-400">In accordance with the New Zealand Privacy Act 2020.</p>
 
-      <div className="space-y-4 text-sm text-slate-700">
-        <p><strong>Last updated:</strong> 2026</p>
+      <div className="space-y-8">
+        <section>
+          <h2 className="text-2xl font-bold text-orange-500 mb-4 text-white">Data Collection</h2>
+          <p>We collect information to help connect you with local services. This includes your name, contact details, and job location. We do not sell your personal information to third parties.</p>
+        </section>
 
-        <p>
-          TradieConnects collects personal information such as name,
-          email, phone, trade, and location to operate the platform.
-        </p>
-
-        <h2 className="text-lg font-semibold">How we use data</h2>
-        <p>
-          We use your data to connect clients and tradies, improve the
-          platform, and provide support.
-        </p>
-
-        <h2 className="text-lg font-semibold">Sharing</h2>
-        <p>
-          Information may be shared with other users where necessary
-          (e.g. contact details after connection).
-        </p>
-
-        <h2 className="text-lg font-semibold">Security</h2>
-        <p>
-          We take reasonable steps to protect your data but cannot
-          guarantee complete security.
-        </p>
-
-        <h2 className="text-lg font-semibold">Your rights</h2>
-        <p>
-          You can request access or correction of your personal data.
-        </p>
-
-        <h2 className="text-lg font-semibold">Contact</h2>
-        <p>
-          Contact: your@email.com
-        </p>
+        <section>
+          <h2 className="text-2xl font-bold text-orange-500 mb-4 text-white">Your Rights</h2>
+          <p>Under the Privacy Act 2020, you have the right to request access to and correction of any personal information we hold about you. Contact us at any time to update your details.</p>
+        </section>
       </div>
     </main>
-  );
+  )
 }

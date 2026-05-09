@@ -1,49 +1,30 @@
 export default function TermsPage() {
   return (
-    <main className="mx-auto max-w-4xl p-6">
-      <h1 className="mb-6 text-3xl font-bold">Terms and Conditions</h1>
+    <main className="min-h-screen p-8 max-w-4xl mx-auto text-slate-300">
+      <h1 className="text-4xl font-black text-white mb-4">Terms and Conditions</h1>
+      <p className="mb-8 text-slate-400 italic">Last Updated: May 2026</p>
 
-      <div className="space-y-4 text-sm text-slate-700">
-        <p><strong>Last updated:</strong> 2026</p>
+      <div className="space-y-8">
+        <section>
+          <h2 className="text-2xl font-bold text-orange-500 mb-4 text-white">1. Our Service</h2>
+          <p>TradieConnects provides a platform to connect homeowners with tradespeople in New Zealand. We are an intermediary and are not a party to any contract formed between users. We do not employ the tradies listed on our site.</p>
+        </section>
 
-        <p>
-          TradieConnects is a platform that connects clients and tradies.
-          We are not a contractor, employer, or service provider.
-        </p>
+        <section>
+          <h2 className="text-2xl font-bold text-orange-500 mb-4 text-white">2. Consumer Guarantees Act (CGA)</h2>
+          <p>While TradieConnects is not the service provider, all tradies using this platform must comply with the Consumer Guarantees Act 1993. This means services must be provided with reasonable care and skill, and be fit for purpose.</p>
+        </section>
 
-        <h2 className="text-lg font-semibold">Use of Platform</h2>
-        <p>
-          Users must provide accurate information and use the platform lawfully.
-        </p>
+        <section>
+          <h2 className="text-2xl font-bold text-orange-500 mb-4 text-white">3. Fair Trading Act (FTA)</h2>
+          <p>Users must not engage in misleading or deceptive conduct. Tradies must represent their qualifications, experience, and pricing accurately in accordance with the Fair Trading Act 1986.</p>
+        </section>
 
-        <h2 className="text-lg font-semibold">Tradies</h2>
-        <p>
-          Tradies are responsible for their qualifications, licences,
-          insurance, and compliance with New Zealand laws.
-        </p>
-
-        <h2 className="text-lg font-semibold">Clients</h2>
-        <p>
-          Clients are responsible for verifying tradies before hiring.
-        </p>
-
-        <h2 className="text-lg font-semibold">No Guarantees</h2>
-        <p>
-          TradieConnects does not guarantee quality of work, licensing,
-          or outcomes of any job.
-        </p>
-
-        <h2 className="text-lg font-semibold">Liability</h2>
-        <p>
-          To the extent permitted by law, TradieConnects is not liable for
-          any loss arising from use of the platform.
-        </p>
-
-        <h2 className="text-lg font-semibold">Contact</h2>
-        <p>
-          Contact: your@email.com
-        </p>
+        <section>
+          <h2 className="text-2xl font-bold text-orange-500 mb-4 text-white">4. Liability</h2>
+          <p>To the extent permitted by NZ law, TradieConnects is not liable for any faulty workmanship, damage to property, or financial loss resulting from a connection made on this platform. We recommend all homeowners verify insurance and licenses before work begins.</p>
+        </section>
       </div>
     </main>
-  );
+  )
 }

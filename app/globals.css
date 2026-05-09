@@ -2,48 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 1. MATCH THE LOGO BACKGROUND GLOBALLY */
 :root {
-  --site-bg: #161A22; /* The exact color from your logo image */
+  --bg-main: #020617; /* Deep Premium Navy */
+  --bg-card: #0f172a; /* Slightly lighter navy for cards/inputs */
+  --accent: #ea580c;  /* NZ Safety Orange */
 }
 
 body {
-  background-color: var(--site-bg) !important;
-  color: #ffffff !important; /* Force all standard text to white */
+  background-color: var(--bg-main) !important;
+  color: #f8fafc !important; /* Off-white text for everything */
+  margin: 0;
 }
 
-/* 2. FORCE ALL INPUTS/SEARCH BARS TO BE DARK ACROSS THE WHOLE SITE */
-input, 
-textarea, 
-select {
-  background-color: #1f2937 !important; /* Dark Grey */
-  color: #ffffff !important;            /* White Text */
-  border: 1px solid #374151 !important; /* Subtle border */
-  border-radius: 0.5rem !important;
+/* Force all text on all pages to be visible */
+h1, h2, h3, p, span, div, input, textarea {
+  color: #f8fafc !important;
 }
 
-/* Make placeholder text visible but dim */
-input::placeholder, 
-textarea::placeholder {
-  color: #9ca3af !important; 
+/* Force all Inputs and Textareas to look the same on every page */
+input, textarea {
+  background-color: var(--bg-card) !important;
+  border: 1px solid #1e293b !important;
+  border-radius: 12px !important;
+  padding: 12px 16px !important;
+  outline: none !important;
 }
 
-/* 3. FIX ALL WHITE CARDS GLOBALLY */
-/* If any component tries to use bg-white, this overrides it to a premium dark grey */
-.bg-white {
-  background-color: #1f2937 !important;
-  border: 1px solid #374151 !important;
-}
-
-/* 4. FIX ALL BLACK TEXT GLOBALLY */
-/* Overrides text that is specifically set to dark colors in components */
-.text-gray-900, 
-.text-slate-900, 
-.text-black {
-  color: #ffffff !important;
-}
-
-/* Keep the blue/orange buttons looking correct */
-button, .bg-orange-600 {
-  color: #ffffff !important;
+input:focus {
+  border-color: var(--accent) !important;
 }
