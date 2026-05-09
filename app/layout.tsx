@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google" // Added /google here
+import { Inter } from "next/font/google"
 import "./globals.css";
 import Header from "@/components/header";
 
@@ -17,7 +17,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-[#0f172a] antialiased`}>
+      {/* text-slate-50 makes all default text off-white. selection:bg-orange-500 is a premium touch */}
+      <body className={`${inter.className} bg-[#0f172a] text-slate-50 antialiased selection:bg-orange-500 selection:text-white`}>
         <Header />
         <main>{children}</main>
       </body>
