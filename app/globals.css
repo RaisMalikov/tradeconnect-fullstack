@@ -2,18 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-/* FORCE WHITE TEXT GLOBALLY */
-* {
-  color: #ffffff !important;
-}
-
-/* EXCEPTIONS: Buttons and specific accents */
-.bg-orange-600 *, .bg-orange-500 *, .text-orange-500 {
-  color: inherit !important;
+:root {
+  /* This color matches the navy background in your logo */
+  --site-bg: #111827; 
 }
 
 body {
-  background-color: #000000 !important; /* Matching the logo background */
-  margin: 0;
-  padding: 0;
+  background-color: var(--site-bg) !important;
+  color: #ffffff;
+}
+
+/* Fixes the invisible text in inputs and cards */
+input, textarea {
+  color: #111827 !important; /* Dark text inside white boxes */
+  background-color: #ffffff !important;
+}
+
+placeholder {
+  color: #64748b !important;
 }

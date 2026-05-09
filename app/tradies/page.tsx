@@ -1,273 +1,70 @@
-"use client";
-
-import { sendEmail } from "@/lib/send-email";
-import { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/lib/supabase";
-
-type Profile = {
-  id: string;
-  full_name: string | null;
-  trade: string | null;
-  location: string | null;
-  phone: string | null;
-  bio: string | null;
-  email: string | null;
-};
-
-type Job = {
-  id: string;
-  title: string;
-};
+import React from 'react'
 
 export default function TradiesPage() {
-  const [tradies, setTradies] = useState<Profile[]>([]);
-  const [myJobs, setMyJobs] = useState<Job[]>([]);
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  const [search, setSearch] = useState("");
-  const [tradeFilter, setTradeFilter] = useState("");
-  const [locationFilter, setLocationFilter] = useState("");
-
-  const [selectedJobs, setSelectedJobs] = useState<Record<string, string>>({});
-  const [inviteMessages, setInviteMessages] = useState<Record<string, string>>({});
-  const [status, setStatus] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  async function loadData() {
-    const { data: tradieData, error: tradieError } = await supabase
-      .from("profiles")
-      .select("id, full_name, trade, location, phone, bio, email")
-      .order("full_name", { ascending: true });
-
-    if (tradieError) {
-      setMessage(tradieError.message);
-      setLoading(false);
-      return;
-    }
-
-    setTradies(tradieData || []);
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (user) {
-      const { data: jobData } = await supabase
-        .from("jobs")
-        .select("id, title")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-
-      setMyJobs(jobData || []);
-    }
-
-    setLoading(false);
-  }
-
-  async function inviteTradie(tradieId: string) {
-    setStatus((prev) => ({ ...prev, [tradieId]: "Sending invitation..." }));
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      setStatus((prev) => ({ ...prev, [tradieId]: "Please log in first." }));
-      return;
-    }
-
-    const jobId = selectedJobs[tradieId];
-
-    if (!jobId) {
-      setStatus((prev) => ({ ...prev, [tradieId]: "Please select a job first." }));
-      return;
-    }
-
-    const customMessage = inviteMessages[tradieId] || "";
-
-    const { error } = await supabase.from("invitations").insert({
-      job_id: jobId,
-      tradie_id: tradieId,
-      client_id: user.id,
-      message: customMessage,
-      status: "pending",
-    });
-
-    if (error) {
-      setStatus((prev) => ({ ...prev, [tradieId]: error.message }));
-      return;
-    }
-
-    const invitedTradie = tradies.find((tradie) => tradie.id === tradieId);
-
-    if (invitedTradie?.email) {
-      await sendEmail(
-        invitedTradie.email,
-        "You received a job invitation on TradieConnects",
-        `A client invited you to apply for a job.\n\nMessage: ${
-          customMessage || "No message"
-        }`,
-        "New job invitation",
-        "View invitation",
-        "https://tradeconnects.co.nz/my-invitations"
-      );
-    }
-
-    setStatus((prev) => ({ ...prev, [tradieId]: "Invitation sent." }));
-    setInviteMessages((prev) => ({ ...prev, [tradieId]: "" }));
-  }
-
-  const filteredTradies = useMemo(() => {
-    return tradies.filter((tradie) => {
-      const text = `${tradie.full_name || ""} ${tradie.trade || ""} ${
-        tradie.location || ""
-      } ${tradie.bio || ""}`.toLowerCase();
-
-      return (
-        text.includes(search.toLowerCase()) &&
-        (!tradeFilter ||
-          (tradie.trade || "")
-            .toLowerCase()
-            .includes(tradeFilter.toLowerCase())) &&
-        (!locationFilter ||
-          (tradie.location || "")
-            .toLowerCase()
-            .includes(locationFilter.toLowerCase()))
-      );
-    });
-  }, [tradies, search, tradeFilter, locationFilter]);
-
-  const tradeOptions = Array.from(
-    new Set(tradies.map((tradie) => tradie.trade).filter(Boolean))
-  ) as string[];
-
-  const locationOptions = Array.from(
-    new Set(tradies.map((tradie) => tradie.location).filter(Boolean))
-  ) as string[];
-
   return (
-    <main className="mx-auto max-w-6xl p-6 text-black">
-      <h1 className="mb-6 text-3xl font-bold">Tradies</h1>
+    <main className="min-h-screen bg-[#111827] pt-12 pb-24">
+      <div className="container mx-auto px-6 max-w-6xl">
+        
+        {/* Page Title */}
+        <h1 className="text-4xl font-black text-white mb-8 tracking-tight">Tradies</h1>
 
-      {message && <p className="mb-4 text-red-600">{message}</p>}
-
-      <div className="mb-6 grid gap-4 md:grid-cols-3">
-        <input
-          className="rounded border p-3"
-          placeholder="Search tradies..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-
-        <select
-          className="rounded border p-3"
-          value={tradeFilter}
-          onChange={(e) => setTradeFilter(e.target.value)}
-        >
-          <option value="">All trades</option>
-          {tradeOptions.map((trade) => (
-            <option key={trade} value={trade}>
-              {trade}
-            </option>
-          ))}
-        </select>
-
-        <select
-          className="rounded border p-3"
-          value={locationFilter}
-          onChange={(e) => setLocationFilter(e.target.value)}
-        >
-          <option value="">All locations</option>
-          {locationOptions.map((location) => (
-            <option key={location} value={location}>
-              {location}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {loading ? (
-        <p>Loading tradies...</p>
-      ) : filteredTradies.length === 0 ? (
-        <p>No tradies found.</p>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {filteredTradies.map((tradie) => (
-            <div key={tradie.id} className="rounded-xl border bg-white p-5 shadow-sm">
-              <h2 className="text-xl font-semibold">
-                {tradie.full_name || "Unnamed tradie"}
-              </h2>
-
-              <p className="mt-2 text-sm text-slate-600">
-                {tradie.trade || "Trade not specified"} •{" "}
-                {tradie.location || "Location not specified"}
-              </p>
-
-              <p className="mt-3 text-sm text-slate-700">
-                {tradie.bio || "No bio provided."}
-              </p>
-
-              <div className="mt-5 border-t pt-4">
-                <h3 className="font-semibold">Invite to a job</h3>
-
-                {myJobs.length === 0 ? (
-                  <p className="mt-2 text-sm text-slate-600">
-                    Log in and post a job first to invite this tradie.
-                  </p>
-                ) : (
-                  <div className="mt-3 space-y-3">
-                    <select
-                      className="w-full rounded border p-3"
-                      value={selectedJobs[tradie.id] || ""}
-                      onChange={(e) =>
-                        setSelectedJobs((prev) => ({
-                          ...prev,
-                          [tradie.id]: e.target.value,
-                        }))
-                      }
-                    >
-                      <option value="">Select your job</option>
-                      {myJobs.map((job) => (
-                        <option key={job.id} value={job.id}>
-                          {job.title}
-                        </option>
-                      ))}
-                    </select>
-
-                    <textarea
-                      className="w-full rounded border p-3"
-                      rows={3}
-                      placeholder="Optional message"
-                      value={inviteMessages[tradie.id] || ""}
-                      onChange={(e) =>
-                        setInviteMessages((prev) => ({
-                          ...prev,
-                          [tradie.id]: e.target.value,
-                        }))
-                      }
-                    />
-
-                    <button
-                      onClick={() => inviteTradie(tradie.id)}
-                      className="w-full rounded bg-blue-600 px-4 py-2 font-semibold text-white"
-                    >
-                      Invite Tradie
-                    </button>
-
-                    {status[tradie.id] && (
-                      <p className="text-sm text-green-600">{status[tradie.id]}</p>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
+        {/* Search Bar Row (Fixed white-on-white text) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+          <input 
+            className="w-full p-4 rounded-xl border border-slate-700 bg-[#1f2937] text-white placeholder-slate-400 focus:ring-2 focus:ring-orange-500 outline-none transition-all"
+            placeholder="Search tradies..."
+          />
+          <input 
+            className="w-full p-4 rounded-xl border border-slate-700 bg-[#1f2937] text-white placeholder-slate-400 focus:ring-2 focus:ring-orange-500 outline-none transition-all"
+            placeholder="Trade (e.g. Plumber, Builder)"
+          />
+          <input 
+            className="w-full p-4 rounded-xl border border-slate-700 bg-[#1f2937] text-white placeholder-slate-400 focus:ring-2 focus:ring-orange-500 outline-none transition-all"
+            placeholder="Location (e.g. Auckland)"
+          />
         </div>
-      )}
+
+        {/* Tradie Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          
+          {/* Card 1 */}
+          <div className="bg-[#1f2937] border border-slate-700 p-6 rounded-2xl shadow-xl flex flex-col hover:border-slate-500 transition-colors">
+            {/* Image Placeholder */}
+            <div className="h-48 bg-slate-800 rounded-xl mb-6 w-full flex items-center justify-center border border-slate-700/50">
+              <span className="text-slate-500 text-sm font-medium">No Image Provided</span>
+            </div> 
+            
+            <h3 className="text-xl font-bold text-white mb-4">John's Plumbing</h3>
+            
+            <textarea 
+              className="w-full p-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-sm mb-6 flex-grow outline-none focus:ring-2 focus:ring-orange-500 placeholder-slate-500 resize-none"
+              placeholder="Optional message..."
+              rows={3}
+            />
+            
+            <button className="w-full bg-[#3b82f6] hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-blue-900/20 active:scale-95">
+              Invite Tradie
+            </button>
+          </div>
+
+          {/* Card 2 */}
+          <div className="bg-[#1f2937] border border-slate-700 p-6 rounded-2xl shadow-xl flex flex-col hover:border-slate-500 transition-colors">
+            <div className="h-48 bg-slate-800 rounded-xl mb-6 w-full flex items-center justify-center border border-slate-700/50">
+               <span className="text-slate-500 text-sm font-medium">No Image Provided</span>
+            </div> 
+            <h3 className="text-xl font-bold text-white mb-4">Elite Electrical NZ</h3>
+            <textarea 
+              className="w-full p-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-sm mb-6 flex-grow outline-none focus:ring-2 focus:ring-orange-500 placeholder-slate-500 resize-none"
+              placeholder="Optional message..."
+              rows={3}
+            />
+            <button className="w-full bg-[#3b82f6] hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-blue-900/20 active:scale-95">
+              Invite Tradie
+            </button>
+          </div>
+
+        </div>
+      </div>
     </main>
-  );
+  )
 }
