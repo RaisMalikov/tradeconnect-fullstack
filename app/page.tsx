@@ -2,76 +2,48 @@ import Link from 'next/link'
 
 export default function Home() {
   return (
-    <div className="relative isolate overflow-hidden">
-      {/* Subtle Background Glow Effect */}
-      <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
-        <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#ea580c] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
-      </div>
+    <main className="relative min-h-screen">
+      {/* Background Decor */}
+      <div className="absolute top-0 left-1/2 -z-10 h-[1000px] w-[1000px] -translate-x-1/2 [background:radial-gradient(circle_at_center,#ea580c10_0,transparent_70%)]" />
 
-      {/* Hero Section */}
-      <div className="mx-auto max-w-4xl px-6 py-32 sm:py-48 lg:py-56 text-center">
-        {/* Trust Badge - FIXED LINK HERE */}
-        <div className="mb-8 flex justify-center">
-          <div className="relative rounded-full px-4 py-1 text-sm leading-6 text-slate-300 ring-1 ring-slate-700/50 hover:ring-orange-500/50 transition-colors bg-slate-800/40 backdrop-blur-sm">
-            Proudly connecting Kiwis nationwide. <Link href="/tradies" className="font-semibold text-orange-500"><span className="absolute inset-0" aria-hidden="true"></span>Find a tradie <span aria-hidden="true">&rarr;</span></Link>
-          </div>
-        </div>
-
-        <h1 className="text-5xl font-black tracking-tight text-white sm:text-7xl mb-8 leading-tight">
-          Find the right <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">Tradie</span> for the job, instantly.
+      {/* 1. HERO SECTION: Big & Clear */}
+      <section className="px-6 pt-24 pb-20 text-center lg:pt-32">
+        <h1 className="text-6xl font-black tracking-tight text-white sm:text-8xl">
+          NZ Jobs. <span className="text-orange-500">Sorted.</span>
         </h1>
-        
-        <p className="mx-auto max-w-2xl text-lg leading-8 text-slate-400 mb-10">
-          The simplest way to hire verified tradespeople or grow your trade business in New Zealand. No hidden fees, just reliable local connections.
+        <p className="mt-8 text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          The heavy-duty marketplace for Kiwi homeowners and tradespeople. Post a job in seconds or grow your business today.
         </p>
-
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link
-            href="/post-job"
-            className="w-full sm:w-auto rounded-full bg-orange-600 px-8 py-4 text-sm font-black uppercase tracking-widest text-white shadow-[0_0_20px_rgba(234,88,12,0.4)] hover:bg-orange-500 hover:shadow-[0_0_30px_rgba(234,88,12,0.6)] transition-all transform hover:-translate-y-1"
-          >
-            Post a Job
+        <div className="mt-12 flex flex-col sm:flex-row justify-center gap-6">
+          <Link href="/post-job" className="bg-orange-600 hover:bg-orange-500 text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest shadow-2xl shadow-orange-900/20 transition-all hover:-translate-y-1">
+            Post a Job Free
           </Link>
-          <Link 
-            href="/tradies" 
-            className="w-full sm:w-auto rounded-full bg-slate-800 border border-slate-700 px-8 py-4 text-sm font-bold text-white hover:bg-slate-700 hover:border-slate-500 transition-all"
-          >
-            Browse Tradies
+          <Link href="/tradies" className="bg-slate-800 hover:bg-slate-700 text-white px-10 py-5 rounded-2xl font-bold border border-slate-700 transition-all">
+            Find a Tradie
           </Link>
         </div>
-      </div>
+      </section>
 
-      {/* Quick Info Grid */}
-      <div className="container mx-auto px-6 pb-32">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Card 1 */}
-          <div className="group bg-slate-800/40 p-8 rounded-3xl border border-slate-700/50 hover:border-orange-500/50 hover:bg-slate-800/80 transition-all duration-300 hover:-translate-y-2">
-            <div className="h-12 w-12 rounded-full bg-orange-500/10 flex items-center justify-center mb-6 border border-orange-500/20 group-hover:bg-orange-500/20 transition-colors">
-              <span className="text-orange-500 font-black text-xl">1</span>
-            </div>
-            <h3 className="text-xl text-white font-bold mb-3">Post Your Job</h3>
-            <p className="text-slate-400 leading-relaxed">Tell us what you need done. Add photos and details in under 60 seconds.</p>
+      {/* 2. THE "WHY" SECTION: Easy to read cards */}
+      <section className="container mx-auto px-6 py-20">
+        <div className="grid md:grid-cols-3 gap-10">
+          <div className="p-8 rounded-3xl bg-slate-900/50 border border-slate-800 hover:border-orange-500/50 transition-colors">
+            <div className="text-4xl mb-4">🇳🇿</div>
+            <h3 className="text-2xl font-bold mb-2">100% Kiwi</h3>
+            <p className="text-slate-400">Built in New Zealand, for New Zealanders. Local support and local tradies.</p>
           </div>
-
-          {/* Card 2 */}
-          <div className="group bg-slate-800/40 p-8 rounded-3xl border border-slate-700/50 hover:border-orange-500/50 hover:bg-slate-800/80 transition-all duration-300 hover:-translate-y-2">
-            <div className="h-12 w-12 rounded-full bg-orange-500/10 flex items-center justify-center mb-6 border border-orange-500/20 group-hover:bg-orange-500/20 transition-colors">
-              <span className="text-orange-500 font-black text-xl">2</span>
-            </div>
-            <h3 className="text-xl text-white font-bold mb-3">Get Connected</h3>
-            <p className="text-slate-400 leading-relaxed">Local, available tradies will view your job and reach out with quotes.</p>
+          <div className="p-8 rounded-3xl bg-slate-900/50 border border-slate-800 hover:border-orange-500/50 transition-colors">
+            <div className="text-4xl mb-4">🛠️</div>
+            <h3 className="text-2xl font-bold mb-2">Verified Pros</h3>
+            <p className="text-slate-400">Review ratings and past work before you hire. Quality guaranteed.</p>
           </div>
-
-          {/* Card 3 */}
-          <div className="group bg-slate-800/40 p-8 rounded-3xl border border-slate-700/50 hover:border-orange-500/50 hover:bg-slate-800/80 transition-all duration-300 hover:-translate-y-2">
-            <div className="h-12 w-12 rounded-full bg-orange-500/10 flex items-center justify-center mb-6 border border-orange-500/20 group-hover:bg-orange-500/20 transition-colors">
-              <span className="text-orange-500 font-black text-xl">3</span>
-            </div>
-            <h3 className="text-xl text-white font-bold mb-3">Get it Done</h3>
-            <p className="text-slate-400 leading-relaxed">Compare profiles, read reviews, hire the best fit, and get it sorted.</p>
+          <div className="p-8 rounded-3xl bg-slate-900/50 border border-slate-800 hover:border-orange-500/50 transition-colors">
+            <div className="text-4xl mb-4">⚡</div>
+            <h3 className="text-2xl font-bold mb-2">Fast Results</h3>
+            <p className="text-slate-400">Receive quotes and connect with available tradies within hours, not days.</p>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   )
 }

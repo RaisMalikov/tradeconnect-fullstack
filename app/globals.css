@@ -1,35 +1,23 @@
-/* app/globals.css */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --primary: #0ea5e9;     /* ← Change this */
-  --primary-dark: #0284c8;
-  --secondary: #1e40af;   /* ← Change this */
-  --accent: #eab308;
-  --success: #22c55e;
-  --danger: #ef4444;
-  --neutral: #64748b;
+  --foreground-rgb: 248, 250, 252; /* Off-white */
+  --background-start-rgb: 15, 23, 42; /* Dark Navy */
+  --background-end-rgb: 15, 23, 42;
 }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-start-rgb));
 }
 
-.tradie-primary {
-  color: var(--primary);
+/* This forces all links and text to be visible against dark mode */
+h1, h2, h3, h4, p, span, a {
+  color: #f8fafc; 
 }
 
-.tradie-btn {
-  background-color: var(--primary);
-  transition: all 0.2s ease;
+.text-orange {
+  color: #f97316;
 }
-
-.tradie-btn:hover {
-  background-color: var(--primary-dark);
-  transform: translateY(-1px);
-}
-
-/* Add more brand utilities as needed */
