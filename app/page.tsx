@@ -10,10 +10,10 @@ export default function Home() {
 
       {/* Hero Section */}
       <div className="mx-auto max-w-4xl px-6 py-32 sm:py-48 lg:py-56 text-center">
-        {/* Trust Badge */}
+        {/* Trust Badge - FIXED LINK HERE */}
         <div className="mb-8 flex justify-center">
           <div className="relative rounded-full px-4 py-1 text-sm leading-6 text-slate-300 ring-1 ring-slate-700/50 hover:ring-orange-500/50 transition-colors bg-slate-800/40 backdrop-blur-sm">
-            Proudly connecting Kiwis nationwide. <Link href="/about" className="font-semibold text-orange-500"><span className="absolute inset-0" aria-hidden="true"></span>Read our story <span aria-hidden="true">&rarr;</span></Link>
+            Proudly connecting Kiwis nationwide. <Link href="/tradies" className="font-semibold text-orange-500"><span className="absolute inset-0" aria-hidden="true"></span>Find a tradie <span aria-hidden="true">&rarr;</span></Link>
           </div>
         </div>
 
