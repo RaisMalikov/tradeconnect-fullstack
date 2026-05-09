@@ -15,7 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-[#0f172a] antialiased">
+  <Header />
+  {children}
+</body>
         <Header />
         {children}
         <Footer />
