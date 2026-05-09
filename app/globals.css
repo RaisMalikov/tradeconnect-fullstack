@@ -2,22 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 248, 250, 252; /* Off-white */
-  --background-start-rgb: 15, 23, 42; /* Dark Navy */
-  --background-end-rgb: 15, 23, 42;
+/* FORCE WHITE TEXT GLOBALLY */
+* {
+  color: #ffffff !important;
+}
+
+/* EXCEPTIONS: Buttons and specific accents */
+.bg-orange-600 *, .bg-orange-500 *, .text-orange-500 {
+  color: inherit !important;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-start-rgb));
-}
-
-/* This forces all links and text to be visible against dark mode */
-h1, h2, h3, h4, p, span, a {
-  color: #f8fafc; 
-}
-
-.text-orange {
-  color: #f97316;
+  background-color: #000000 !important; /* Matching the logo background */
+  margin: 0;
+  padding: 0;
 }
