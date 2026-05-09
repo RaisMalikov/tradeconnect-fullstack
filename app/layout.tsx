@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font"
 import "./globals.css";
 import Header from "@/components/header";
-import { Footer } from "@/components/footer";
+
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "TradieConnects",
-  description: "Direct jobs for tradies in New Zealand",
+  title: "TradieConnects | Find NZ Tradies",
+  description: "The marketplace for New Zealand tradespeople",
 };
 
 export default function RootLayout({
@@ -15,13 +17,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-[#0f172a] antialiased">
-  <Header />
-  {children}
-</body>
+      <body className={`${inter.className} bg-[#0f172a] antialiased`}>
         <Header />
         {children}
-        <Footer />
       </body>
     </html>
   );
